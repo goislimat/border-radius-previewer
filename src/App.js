@@ -1,14 +1,16 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 
 import {
   BorderTypesCommands,
-  UnitTypesCommands,
-  Playground,
   CodeContainer,
+  Helper,
+  Playground,
+  UnitTypesCommands,
 } from "./components";
 
 const Main = styled.main`
+  position: realtive;
   background-color: #000;
   min-height: 100vh;
   display: flex;
@@ -17,60 +19,97 @@ const Main = styled.main`
   align-items: center;
 `;
 
+const Content = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  width: 90vw;
+`;
+
+const Section = styled.section`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
 const Title = styled.h1`
   color: #f7f7f7;
   font-style: italic;
   font-weight: 700;
-  margin: 32px;
+  margin: 48px 0;
 `;
 
-function App() {
-  const [borderValues, setBorderValues] = useState({
-    topLeft: 0,
-    topRight: 0,
-    bottomRight: 0,
-    bottomLeft: 0,
-  });
+const INITIAL = {
+  topLeft: 0,
+  topRight: 0,
+  bottomRight: 0,
+  bottomLeft: 0,
+};
 
-  const [complexBorderValues, setComplexBorderValues] = useState({
-    topLeft: 0,
-    topRight: 0,
-    bottomRight: 0,
-    bottomLeft: 0,
-    leftTop: 0,
-    rightTop: 0,
-    rightBottom: 0,
-    leftBottom: 0,
-  });
+const INITIAL_COMPLEX = {
+  ...INITIAL,
+  leftTop: 0,
+  rightTop: 0,
+  rightBottom: 0,
+  leftBottom: 0,
+};
+
+function App() {
+  const [borderValues, setBorderValues] = useState(INITIAL);
+
+  const [complexBorderValues, setComplexBorderValues] = useState(
+    INITIAL_COMPLEX
+  );
 
   const [isComplex, setComplex] = useState(false);
+  const [complexVisitedCounter, setComplexVisitedCounter] = useState(0);
 
   const [unit, setUnit] = useState("px");
 
-  const [showFeedback, setShowFeedback] = useState(false);
+  function drawRandons() {
+    function getRandom() {
+      return Math.floor(Math.random() * 150 + 30);
+    }
 
-  const [codeString, setCodeString] = useState(
-    `${borderValues.topLeft}px ${borderValues.topRight}px ${borderValues.bottomRight}px ${borderValues.bottomLeft}px;`
-  );
+    const values = {
+      topLeft: getRandom(),
+      topRight: getRandom(),
+      bottomRight: getRandom(),
+      bottomLeft: getRandom(),
+    };
 
-  const codeRef = useRef();
+    if (isComplex) {
+      setComplexBorderValues({
+        ...values,
+        leftTop: getRandom(),
+        rightTop: getRandom(),
+        rightBottom: getRandom(),
+        leftBottom: getRandom(),
+      });
+    } else {
+      setBorderValues(values);
+    }
+  }
+
+  useEffect(function () {
+    setTimeout(function () {
+      [1, 2, 3, 4].forEach(function (i) {
+        setTimeout(drawRandons, i * 750);
+      });
+    }, 500);
+  }, []);
 
   useEffect(
     function () {
-      let borderRadiusString;
-
-      if (isComplex) {
-        borderRadiusString = `${complexBorderValues.topLeft}${unit} ${complexBorderValues.topRight}${unit} ${complexBorderValues.bottomRight}${unit} ${complexBorderValues.bottomLeft}${unit} / ${complexBorderValues.leftTop}${unit} ${complexBorderValues.rightTop}${unit} ${complexBorderValues.rightBottom}${unit} ${complexBorderValues.leftBottom}${unit}`;
-      } else {
-        borderRadiusString = `${borderValues.topLeft}${unit} ${borderValues.topRight}${unit} ${borderValues.bottomRight}${unit} ${borderValues.bottomLeft}${unit}`;
+      if (complexVisitedCounter === 1) {
+        setTimeout(function () {
+          [1, 2, 3, 4].forEach(function (i) {
+            setTimeout(drawRandons, i * 750);
+          });
+        }, 500);
       }
-
-      setCodeString(borderRadiusString);
-      // document.getElementById(
-      //   "rounded-border-box"
-      // ).style.borderRadius = borderRadiusString;
     },
-    [borderValues, complexBorderValues, isComplex, unit]
+    [complexVisitedCounter]
   );
 
   function setBorderNewValue(corner, value) {
@@ -121,28 +160,41 @@ function App() {
     };
   }
 
+  function incrementComplexVisitedCounter() {
+    setComplexVisitedCounter(complexVisitedCounter + 1);
+  }
+
   return (
     <Main>
       <Title>BORDER RADIUS GENERATOR</Title>
-      <BorderTypesCommands
-        handleBorderTypeChange={setComplex}
-        isComplex={isComplex}
-      />
-      <UnitTypesCommands handleUnitChange={setUnit} unit={unit} />
+      <Content>
+        <Section>
+          <BorderTypesCommands
+            handleBorderTypeChange={setComplex}
+            isComplex={isComplex}
+            incrementComplexVisitedCounter={incrementComplexVisitedCounter}
+          />
+          <UnitTypesCommands handleUnitChange={setUnit} unit={unit} />
+        </Section>
 
-      <Playground
-        bordersObject={isComplex ? complexBorderValues : borderValues}
-        isComplex={isComplex}
-        handleInputChange={handleBorderValueChange}
-        handleInputModByOne={handleModByOne}
-        unit={unit}
-      />
+        <Section>
+          <Playground
+            bordersObject={isComplex ? complexBorderValues : borderValues}
+            isComplex={isComplex}
+            handleInputChange={handleBorderValueChange}
+            handleInputModByOne={handleModByOne}
+            unit={unit}
+          />
 
-      <CodeContainer
-        bordersObject={isComplex ? complexBorderValues : borderValues}
-        unit={unit}
-        isComplex={isComplex}
-      />
+          <CodeContainer
+            bordersObject={isComplex ? complexBorderValues : borderValues}
+            unit={unit}
+            isComplex={isComplex}
+          />
+        </Section>
+      </Content>
+
+      <Helper />
     </Main>
   );
 }

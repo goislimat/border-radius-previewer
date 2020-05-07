@@ -10,7 +10,7 @@ const Container = styled.section`
   border-radius: 5px;
   margin: 32px 0 64px;
   padding: 32px 48px;
-  min-width: 600px;
+  min-width: 700px;
 `;
 
 const Button = styled.button`

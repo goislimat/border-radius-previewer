@@ -3,7 +3,8 @@ import styled, { css } from "styled-components";
 
 const OptionsHolder = styled.section`
   display: flex;
-  margin: 32px;
+  flex-direction: column;
+  margin: 32px 0;
 `;
 
 const Button = styled.button`
@@ -15,12 +16,16 @@ const Button = styled.button`
     font-size: 16px;
     font-weight: 700;
     padding: 24px 32px;
-    margin: 0 16px;
+    margin: 16px 0;
     outline: 0;
   `}
 `;
 
-function BorderTypesCommands({ isComplex, handleBorderTypeChange }) {
+function BorderTypesCommands({
+  isComplex,
+  handleBorderTypeChange,
+  incrementComplexVisitedCounter,
+}) {
   return (
     <OptionsHolder>
       <Button
@@ -28,7 +33,12 @@ function BorderTypesCommands({ isComplex, handleBorderTypeChange }) {
         onClick={() => handleBorderTypeChange(false)}>
         SIMPLE BORDERS
       </Button>
-      <Button isActive={isComplex} onClick={() => handleBorderTypeChange(true)}>
+      <Button
+        isActive={isComplex}
+        onClick={() => {
+          handleBorderTypeChange(true);
+          incrementComplexVisitedCounter();
+        }}>
         COMPLEX BORDERS
       </Button>
     </OptionsHolder>

@@ -20,48 +20,48 @@ const Input = styled.input`
       case "topLeft":
         positioning = `
           top: 0;
-          left: ${isComplex ? "50px" : "0"};
+          left: ${isComplex ? "100px" : "0"};
         `;
         break;
       case "topRight":
         positioning = `
           top: 0;
-          right: ${isComplex ? "50px" : "0"};
+          right: ${isComplex ? "100px" : "0"};
         `;
         break;
       case "bottomRight":
         positioning = `
           bottom: 0;
-          right: ${isComplex ? "50px" : "0"};
+          right: ${isComplex ? "100px" : "0"};
         `;
         break;
       case "bottomLeft":
         positioning = `
           bottom: 0;
-          left: ${isComplex ? "50px" : "0"};
+          left: ${isComplex ? "100px" : "0"};
         `;
         break;
       case "leftTop":
         positioning = `
-          top: 50px;
+          top: 100px;
           left: 0;
         `;
         break;
       case "rightTop":
         positioning = `
-          top: 50px;
+          top: 100px;
           right: 0;
         `;
         break;
       case "rightBottom":
         positioning = `
-          bottom: 50px;
+          bottom: 100px;
           right: 0;
         `;
         break;
       case "leftBottom":
         positioning = `
-          bottom: 50px;
+          bottom: 100px;
           left: 0;
         `;
         break;
@@ -92,6 +92,7 @@ const DynamicShape = styled.div`
     height: 350px;
     width: 350px;
     border-radius: ${borders};
+    transition: border-radius 250ms ease;
   `}
 `;
 
